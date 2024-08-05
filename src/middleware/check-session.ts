@@ -21,7 +21,6 @@ export interface AuthenticatedRequest extends Request {
 export interface UserAuth{
   userId: number,
   email: string,
-  role: string,
 }
 
 export default async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

@@ -12,36 +12,70 @@ model User {
   email     String     @unique
   name      String
   phone     String?
-  role      Role
   password  String
+  profilePicture String?
+  bio       String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  Employee  Employee?
-  Employeer Employeer?
+  events    Event[]
+  comments  Comment[]
+  likes     Like[]
+  followers Follower[] @relation("FollowedUsers")
+  following Follower[] @relation("FollowingUsers")
+  notifications Notification[]
 }
 
-model Employee {
-  id            Int      @id @default(autoincrement())
-  title         String
-  yearly_salary Int
-  address       String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  user          User?    @relation(fields: [userId], references: [id])
-  userId        Int     @unique
+model Event {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  date        DateTime
+  time        String
+  location    String
+  image       String?
+  category    String
+  createdBy   User       @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  comments    Comment[]
+  likes       Like[]
 }
 
-model Employeer {
+model Comment {
+  id        Int        @id @default(autoincrement())
+  content   String
+  event     Event      @relation(fields: [eventId], references: [id])
+  eventId   Int
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime   @default(now())
+}
+
+model Like {
+  id        Int        @id @default(autoincrement())
+  event     Event      @relation(fields: [eventId], references: [id])
+  eventId   Int
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime   @default(now())
+}
+
+model Follower {
+  id          Int      @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+  follower    User     @relation("FollowingUsers", fields: [followerId], references: [id])
+  following   User     @relation("FollowedUsers", fields: [followingId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model Notification {
   id        Int      @id @default(autoincrement())
-  address   String?
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  content   String
+  read      Boolean  @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    Int     @unique
-}
-
-enum Role {
-  ADMIN
-  EMPLOYEER
-  EMPLOYEE
 }

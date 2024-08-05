@@ -1,12 +1,12 @@
 import 'express-async-errors'
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import ApiRouter from "./routes/index"
+import ApiRouter from "./apis/route"
 import errorHandler from "./middleware/handle-error";
 import swaggerUi from 'swagger-ui-express';
 import swaggerOutput from "./swagger_output.json";
 import cors from "cors"
-import './routes/excel-upload/bulk-upload-worker'
+import './apis/excel-upload/bulk-upload-worker'
 
 dotenv.config();
 const app = express();
