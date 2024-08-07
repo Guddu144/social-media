@@ -73,7 +73,10 @@ model Follower {
   follower    User     @relation("UserFollowing", fields: [followerId], references: [id])
   following   User     @relation("UserFollowers", fields: [followingId], references: [id])
   createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
 }
+
 
 model Notification {
   id        Int      @id @default(autoincrement())

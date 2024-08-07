@@ -2,6 +2,8 @@ import { Router } from "express";
 import EventsRouter from "./event/route"
 import CommentRouter from "./comment/route"
 import LikeRouter from "./like/route"
+import FollowRouter from "./follow/route"
+
 
 
 
@@ -29,6 +31,14 @@ router.use('/comment',CommentRouter
 
 router.use('/like',LikeRouter
     // #swagger.tags = ['Like']
+   /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
+)
+
+
+router.use('/follow',FollowRouter
+    // #swagger.tags = ['Follow']
    /* #swagger.security = [{
             "bearerAuth": []
     }] */

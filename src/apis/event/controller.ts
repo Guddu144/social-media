@@ -7,7 +7,6 @@ import { Category } from "./schema";
 class EventController {
   constructor(private prisma: PrismaClient) {}
 
-  // Create a new event
   create = async (req: AuthenticatedRequest, res: Response) => {
     const { title, description, date, time, location, image, category } = req.body;
     const userId = req.user?.userId;
@@ -38,7 +37,6 @@ class EventController {
     return res.status(201).json({ event, message: "Event created successfully" });
   };
 
-  // Get an event by ID
   getOne = async (req: Request, res: Response) => {
     const { id } = req.params;
 
@@ -55,19 +53,56 @@ class EventController {
         id: ["Event not found"],
       });
     }
-
-    return res.json(event);
+    const commentCount = await this.prisma.comment.count({
+      where: { eventId: event.id },
+    });
+  
+    const likeCount = await this.prisma.like.count({
+      where: { eventId: event.id },
+    });
+    return res.json({
+      ...event,
+      commentCount,
+      likeCount,
+    });
   };
 
-  // List events with filtering, pagination, etc.
+  // list = async (req: Request, res: Response) => {
+  //   const { category, date, page = 1, limit = 10 } = req.query;
+
+  //   const filters: any = {};
+
+  //   if (category) filters.category = category as Category;
+  //   if (date) filters.date = new Date(String(date));
+
+  //   const events = await this.prisma.event.findMany({
+  //     where: filters,
+  //     skip: (Number(page) - 1) * Number(limit),
+  //     take: Number(limit),
+  //     include: {
+  //       comments: true,
+  //       likes: true,
+  //     },
+  //   });
+
+  //   const totalEvents = await this.prisma.event.count({ where: filters });
+
+  //   return res.json({
+  //     total: totalEvents,
+  //     page: Number(page),
+  //     limit: Number(limit),
+  //     events,
+  //   });
+  // };
+
   list = async (req: Request, res: Response) => {
     const { category, date, page = 1, limit = 10 } = req.query;
-
+  
     const filters: any = {};
-
+  
     if (category) filters.category = category as Category;
     if (date) filters.date = new Date(String(date));
-
+  
     const events = await this.prisma.event.findMany({
       where: filters,
       skip: (Number(page) - 1) * Number(limit),
@@ -75,20 +110,26 @@ class EventController {
       include: {
         comments: true,
         likes: true,
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
       },
     });
-
+  
     const totalEvents = await this.prisma.event.count({ where: filters });
-
+  
     return res.json({
       total: totalEvents,
       page: Number(page),
       limit: Number(limit),
-      events,
+      events
     });
   };
+  
 
-  // Update an existing event
   update = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { title, description, date, time, location, image, category } = req.body;
@@ -102,7 +143,7 @@ class EventController {
         time,
         location,
         image,
-        category: category as Category, // Ensure category is of enum type
+        category: category as Category, 
       },
     });
 
@@ -113,7 +154,6 @@ class EventController {
     return res.json({ event, message: "Event updated successfully" });
   };
 
-  // Delete an event
   delete = async (req: Request, res: Response) => {
     const { id } = req.params;
 
