@@ -54,7 +54,7 @@ class UserController {
   };
 
   signup = async (req: Request, res: Response) => {
-    const { email, name, phone, password } = req.body;
+    const { email, name, phone, password,bio } = req.body;
     const hashedPassword = await hashPassword(password);
     const user = await this.prisma.user.create({
       data: {
@@ -62,6 +62,7 @@ class UserController {
         name: name,
         phone: JSON.stringify(phone),
         password: hashedPassword,
+        bio: bio,
       },
     });
     if (!user) {

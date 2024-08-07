@@ -3,25 +3,30 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mysql" // Use 'postgresql' for PostgreSQL, 'sqlite' for SQLite, etc.
   url      = env("DATABASE_URL")
 }
 
+enum Category {
+  MUSIC
+  SPORT
+  TECH
+}
+
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  name      String
-  phone     String?
-  password  String
-  profilePicture String?
-  bio       String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  events    Event[]
-  comments  Comment[]
-  likes     Like[]
-  followers Follower[] @relation("FollowedUsers")
-  following Follower[] @relation("FollowingUsers")
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  name          String
+  phone         String?
+  password      String
+  bio           String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  events        Event[]
+  comments      Comment[]
+  likes         Like[]
+  followers     Follower[]     @relation("UserFollowers")
+  following     Follower[]     @relation("UserFollowing")
   notifications Notification[]
 }
 
@@ -33,13 +38,13 @@ model Event {
   time        String
   location    String
   image       String?
-  category    String
-  createdBy   User       @relation(fields: [userId], references: [id])
+  category    Category
   userId      Int
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [userId], references: [id])
   comments    Comment[]
   likes       Like[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Comment {
@@ -65,8 +70,8 @@ model Follower {
   id          Int      @id @default(autoincrement())
   followerId  Int
   followingId Int
-  follower    User     @relation("FollowingUsers", fields: [followerId], references: [id])
-  following   User     @relation("FollowedUsers", fields: [followingId], references: [id])
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id])
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id])
   createdAt   DateTime @default(now())
 }
 

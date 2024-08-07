@@ -6,7 +6,6 @@ import errorHandler from "./middleware/handle-error";
 import swaggerUi from 'swagger-ui-express';
 import swaggerOutput from "./swagger_output.json";
 import cors from "cors"
-import './apis/excel-upload/bulk-upload-worker'
 
 dotenv.config();
 const app = express();
