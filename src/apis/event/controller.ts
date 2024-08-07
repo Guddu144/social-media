@@ -67,34 +67,6 @@ class EventController {
     });
   };
 
-  // list = async (req: Request, res: Response) => {
-  //   const { category, date, page = 1, limit = 10 } = req.query;
-
-  //   const filters: any = {};
-
-  //   if (category) filters.category = category as Category;
-  //   if (date) filters.date = new Date(String(date));
-
-  //   const events = await this.prisma.event.findMany({
-  //     where: filters,
-  //     skip: (Number(page) - 1) * Number(limit),
-  //     take: Number(limit),
-  //     include: {
-  //       comments: true,
-  //       likes: true,
-  //     },
-  //   });
-
-  //   const totalEvents = await this.prisma.event.count({ where: filters });
-
-  //   return res.json({
-  //     total: totalEvents,
-  //     page: Number(page),
-  //     limit: Number(limit),
-  //     events,
-  //   });
-  // };
-
   list = async (req: Request, res: Response) => {
     const { category, date, page = 1, limit = 10 } = req.query;
   

@@ -3,13 +3,7 @@ import EventsRouter from "./event/route"
 import CommentRouter from "./comment/route"
 import LikeRouter from "./like/route"
 import FollowRouter from "./follow/route"
-
-
-
-
-
 import UserRouter from "./user/route"
-import checkSession from "../middleware/check-session";
 
 const router = Router();
 

@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 import { UnexpectedError, ValidationFailedError } from "../../utils/errors";
 import { generateToken } from "../../utils/jwt";
 import { comparePassword, hashPassword } from "../../utils/bcrypt";
+import { AuthenticatedRequest } from "../../middleware/check-session";
+import { Category } from "../event/schema";
 
 class UserController {
   constructor(private prisma: PrismaClient) {}
@@ -70,6 +72,54 @@ class UserController {
     }
     return res.json({ user });
   };
+
+  getFollowingEvents = async (req: AuthenticatedRequest, res: Response) => {
+    const { category, date, page = 1, limit = 10 } = req.query;
+  
+    const filters: any = {};
+  
+    if (category) filters.category = category as Category;
+    if (date) filters.date = new Date(String(date));
+    const userId = req.user?.userId;
+    
+    const followers = await this.prisma.user.findMany({
+      where: {
+        followers: {
+          some: {
+            followerId: userId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        events: {
+          where: filters,
+          include: {
+            comments: true,
+            likes: true,
+            _count: {
+              select: {
+                comments: true,
+                likes: true,
+              },
+            },
+          },
+        },
+      },
+     
+    });
+
+    if (!followers) {
+      throw new UnexpectedError("Failed to get following user's events");
+    }
+
+    return res.json({
+      page: Number(page),
+      limit: Number(limit),
+      followers});
+  };
+
 }
 
 export default UserController;
