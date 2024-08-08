@@ -1,4 +1,4 @@
-# SOcial Media
+# Social Media
 
 This is a Social Media platform that allows users to create, share, and interact with events. Follow the instructions below to set up and run the project.
 
