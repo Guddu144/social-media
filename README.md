@@ -43,11 +43,11 @@ This is a Social Media platform that allows users to create, share, and interact
 
 # Project Structure
 
-    src/: Contains the main source code for the application.
-    controllers/: Contains the route controllers.
-    middleware/: Contains middleware functions.
-    models/: Contains Prisma models and schema definitions.
-    routes/: Contains the route definitions.
-    services/: Contains service functions.
-    utils/: Contains utility functions.
-    prisma/: Contains Prisma schema and seed files.
+src/: Contains the main source code for the application.
+controllers/: Contains the route controllers.
+middleware/: Contains middleware functions.
+models/: Contains Prisma models and schema definitions.
+routes/: Contains the route definitions.
+services/: Contains service functions.
+utils/: Contains utility functions.
+prisma/: Contains Prisma schema and seed files.
