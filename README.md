@@ -1,55 +1,55 @@
-# Employee Management
+# SOcial Media
 
-This is an Employee Management system. Follow the instructions below to set up and run the project
+This is a Social Media platform that allows users to create, share, and interact with events. Follow the instructions below to set up and run the project.
 
 # Prerequisites
-1) Node.js
-2) Docker
+
+1. Node.js
+2. MySQL
 
 # Setup
 
 . Clone the Repository
+Clone the repository to your local machine using the following command:
 
-	git clone https://github.com/Guddu144/employee-management.git
-	cd employee-management
+    git clone git@github.com:Guddu144/social-media.git
+    cd social-media
 
 . Create a .env File
+Create a .env file at the root of the project. The structure should be based on the .env.example file provided in the repository. For example:
 
-	Create a .env file at the root of the project based on the structure of .env.example.
+    DATABASE_URL="mysql://root:guddu123@localhost:3306/social-media"
+    JWT_SECRET="your_jwt_secret"
+    PORT=3000
 
 . Install Dependencies
+Install the project dependencies using npm:
 
-	npm install
- 
-. Build the Docker Image
+    npm install
 
-	docker build -t employee-management-be-image .
+. Start the Project
 
-.	Start the Project
+    npm run start:dev
 
-	docker compose up
- 
- . Seed Database
+. Run Database Migration
+To run database migrations, use the following commands
 
-	npm run runner src/seed/seedAdmin.ts
+    npx prisma generate
+    npx prisma migrate dev --name init
 
-.	Access the Application
-	Open your browser and go to http://localhost:PORT (replace PORT with the actual port number).
- 	Swagger API documentation can be accessed at:
+. Access the Application
+Open your browser and go to http://localhost:PORT (replace PORT with the actual port number).
+Swagger API documentation can be accessed at:
 
-   	http://localhost:PORT/api-docs
+http://localhost:PORT/api-docs
 
-# Database
+# Project Structure
 
-We're using schema.prisma for database migrations. The DATABASE_URL in your .env file should be:
-
-	DATABASE_URL="mysql://root:password123@database:3306/employe_db"
-
-Database migrations and seeding are automatically handled by the docker-compose.yaml file.
-
-# Accessing the System
-You can log in with the following credentials:
-
-	Email: admin@gmail.com
-	Password: admin123
-
+    src/: Contains the main source code for the application.
+    controllers/: Contains the route controllers.
+    middleware/: Contains middleware functions.
+    models/: Contains Prisma models and schema definitions.
+    routes/: Contains the route definitions.
+    services/: Contains service functions.
+    utils/: Contains utility functions.
+    prisma/: Contains Prisma schema and seed files.
