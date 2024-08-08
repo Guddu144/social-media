@@ -4,6 +4,8 @@ import CommentRouter from "./comment/route"
 import LikeRouter from "./like/route"
 import FollowRouter from "./follow/route"
 import UserRouter from "./user/route"
+import NotificationRouter from "./notification/route"
+
 
 const router = Router();
 
@@ -33,6 +35,13 @@ router.use('/like',LikeRouter
 
 router.use('/follow',FollowRouter
     // #swagger.tags = ['Follow']
+   /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
+)
+
+router.use('/notification',NotificationRouter
+    // #swagger.tags = ['Notification']
    /* #swagger.security = [{
             "bearerAuth": []
     }] */

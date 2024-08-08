@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { UnexpectedError, ValidationFailedError } from "../../utils/errors";
 import { AuthenticatedRequest } from "../../middleware/check-session";
+import NotificationService from "../../service/NotificationService";
 
 class CommentController {
   constructor(private prisma: PrismaClient) {}
@@ -21,6 +22,12 @@ class CommentController {
     if (!comment) {
       throw new UnexpectedError("Failed to create comment");
     }
+
+    const event = await this.prisma.event.findUnique({ where: { id: Number(eventId) } });
+    if (event) {
+      await NotificationService.createNotification(event.userId, 'New Comment', `New comment on your event: "${event.title}".`);
+    }
+
 
     return res.status(201).json({ comment, message: "Comment created successfully" });
   };

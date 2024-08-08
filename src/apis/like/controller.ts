@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { UnexpectedError, ValidationFailedError } from "../../utils/errors";
 import { AuthenticatedRequest } from "../../middleware/check-session";
+import NotificationService from "../../service/NotificationService";
 
 class LikeController {
   constructor(private prisma: PrismaClient) {}
@@ -32,6 +33,11 @@ class LikeController {
 
     if (!like) {
       throw new UnexpectedError("Failed to create like");
+    }
+
+    const event = await this.prisma.event.findUnique({ where: { id: Number(eventId) } });
+    if (event) {
+      await NotificationService.createNotification(event.userId, 'New Like', `Your event "${event.title}" has a new like.`);
     }
 
     return res.status(201).json({ like, message: "Like created successfully" });

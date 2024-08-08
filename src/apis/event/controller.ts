@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { UnexpectedError, ValidationFailedError } from "../../utils/errors";
 import { AuthenticatedRequest } from "../../middleware/check-session";
 import { Category } from "./schema";
+import NotificationService from "../../service/NotificationService";
 
 class EventController {
   constructor(private prisma: PrismaClient) {}
@@ -122,6 +123,7 @@ class EventController {
     if (!event) {
       throw new UnexpectedError("Failed to update event");
     }
+    await NotificationService.createNotification(Number(event.userId), 'Event Update', `Event "${title}" has been updated.`);
 
     return res.json({ event, message: "Event updated successfully" });
   };
